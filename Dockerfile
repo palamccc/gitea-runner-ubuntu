@@ -25,7 +25,9 @@ RUN set -eux; \
     echo "deb [signed-by=/etc/apt/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
       > /etc/apt/sources.list.d/google-cloud-sdk.list; \
     apt-get update; \
-    CLOUDSDK_SKIP_PY_COMPILATION=1 apt-get install --no-install-recommends -y "google-cloud-cli=${GCLOUD_VERSION}-0"; \
+    CLOUDSDK_SKIP_PY_COMPILATION=1 apt-get install --no-install-recommends -y \
+      "google-cloud-cli=${GCLOUD_VERSION}-0" \
+      "google-cloud-cli-gke-gcloud-auth-plugin=${GCLOUD_VERSION}-0"; \
     rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
@@ -42,11 +44,12 @@ RUN set -eux; \
     ln -sf /opt/bun/bin/bunx /usr/local/bin/bunx
 
 LABEL org.opencontainers.image.title="Gitea Ubuntu 24.04 job image" \
-      org.opencontainers.image.description="Ubuntu 24.04 Gitea job image with Google Cloud CLI, kubectl, and Bun" \
+      org.opencontainers.image.description="Ubuntu 24.04 Gitea job image with Google Cloud CLI, GKE auth plugin, kubectl, and Bun" \
       org.opencontainers.image.source="https://github.com/palamccc/gitea-runner-ubuntu"
 
 RUN set -eux; \
     test "$(. /etc/os-release && echo "${VERSION_ID}")" = "24.04"; \
     gcloud --version; \
+    command -v gke-gcloud-auth-plugin; \
     kubectl version --client; \
     bun --version

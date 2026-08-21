@@ -8,6 +8,7 @@ It adds these pinned tools:
 | Tool | Version |
 | --- | --- |
 | Google Cloud CLI | 581.0.0 |
+| GKE gcloud auth plugin | 581.0.0 |
 | kubectl | 1.36.2 |
 | Bun | 1.3.14 |
 
@@ -65,6 +66,9 @@ jobs:
             --project "$GCP_PROJECT"
           kubectl apply -f k8s/
 ```
+
+The `gke-gcloud-auth-plugin` is included so `kubectl` can authenticate to GKE
+clusters using the active Google Cloud credentials.
 
 Provide `GKE_CLUSTER`, `GKE_LOCATION`, and `GCP_PROJECT` through Gitea
 secrets or environment configuration. Never bake cloud credentials into this
