@@ -11,6 +11,8 @@ It adds these pinned tools:
 | GKE gcloud auth plugin | 581.0.0 |
 | kubectl | 1.36.2 |
 | Bun | 1.3.14 |
+| Node.js | 26.9.0 |
+| pnpm | 12.5.1 |
 
 The image is published for `linux/amd64` as:
 
@@ -86,6 +88,8 @@ docker run --rm --platform linux/amd64 gitea-runner-ubuntu:latest bash -lc '
   . /etc/os-release && test "$VERSION_ID" = "24.04"
   gcloud --version
   kubectl version --client
+  node --version
+  pnpm --version
   bun --version
 '
 ```
