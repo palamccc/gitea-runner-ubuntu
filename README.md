@@ -13,6 +13,11 @@ It adds these pinned tools:
 | Bun | 1.3.14 |
 | Node.js | 26.9.0 |
 | pnpm | 12.5.1 |
+| Terraform | 1.13.5 |
+
+Terraform is installed from the official HashiCorp release archive. The build
+checks the archive against the official SHA256 checksum and verifies the exact
+Terraform version. Version 1.13.5 satisfies `>=1.7.0,<2.0.0`.
 
 The image is published for `linux/amd64` as:
 
@@ -91,6 +96,7 @@ docker run --rm --platform linux/amd64 gitea-runner-ubuntu:latest bash -lc '
   node --version
   pnpm --version
   bun --version
+  terraform version
 '
 ```
 

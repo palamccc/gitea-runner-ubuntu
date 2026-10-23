@@ -9,6 +9,7 @@ ARG BUN_VERSION=1.3.14
 ARG NODE_MAJOR_VERSION=26
 ARG NODE_VERSION=26.9.0-1nodesource1
 ARG PNPM_VERSION=12.5.1
+ARG TERRAFORM_VERSION=1.13.5
 
 ENV DEBIAN_FRONTEND=noninteractive \
     BUN_INSTALL=/opt/bun \
@@ -53,8 +54,22 @@ RUN set -eux; \
     ln -sf /opt/bun/bin/bun /usr/local/bin/bun; \
     ln -sf /opt/bun/bin/bunx /usr/local/bin/bunx
 
+RUN set -eux; \
+    test "$(dpkg --print-architecture)" = amd64; \
+    workdir="$(mktemp -d)"; \
+    cd "$workdir"; \
+    archive="terraform_${TERRAFORM_VERSION}_linux_amd64.zip"; \
+    curl -fsSLO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/${archive}"; \
+    curl -fsSLO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS"; \
+    grep "  ${archive}$" "terraform_${TERRAFORM_VERSION}_SHA256SUMS" > terraform.sha256; \
+    sha256sum --check --strict terraform.sha256; \
+    unzip "$archive" terraform; \
+    install -o root -g root -m 0755 terraform /usr/local/bin/terraform; \
+    cd /; \
+    rm -rf "$workdir"
+
 LABEL org.opencontainers.image.title="Gitea Ubuntu 24.04 job image" \
-      org.opencontainers.image.description="Ubuntu 24.04 Gitea job image with Google Cloud CLI, GKE auth plugin, kubectl, Node.js, pnpm, and Bun" \
+      org.opencontainers.image.description="Ubuntu 24.04 Gitea job image with Google Cloud CLI, GKE auth plugin, kubectl, Node.js, pnpm, Bun, and Terraform" \
       org.opencontainers.image.source="https://github.com/palamccc/gitea-runner-ubuntu"
 
 RUN set -eux; \
@@ -66,4 +81,7 @@ RUN set -eux; \
     [[ "$node_version" == v26.* ]]; \
     echo "$node_version"; \
     pnpm --version; \
-    bun --version
+    bun --version; \
+    terraform_version="$(terraform version)"; \
+    echo "$terraform_version"; \
+    test "$(head -n 1 <<< "$terraform_version")" = "Terraform v${TERRAFORM_VERSION}"
