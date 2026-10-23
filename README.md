@@ -16,8 +16,7 @@ It adds these pinned tools:
 | Terraform | 1.13.5 |
 
 Terraform is installed from the official HashiCorp release archive. The build
-checks the archive against the official SHA256 checksum and verifies the exact
-Terraform version. Version 1.13.5 satisfies `>=1.7.0,<2.0.0`.
+prints the Terraform version. Version 1.13.5 satisfies `>=1.7.0,<2.0.0`.
 
 The image is published for `linux/amd64` as:
 
